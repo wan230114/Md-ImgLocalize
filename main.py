@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
 """
 This code is adapted from https://github.com/xZaR3y4p/Img_link_to_local_markdown
 WORKFLOW:
@@ -21,11 +24,12 @@ import json
 import aiohttp
 import urllib.request
 from typing import Dict
+from datetime import datetime
 
 from utils import create_folder, is_valid_url, write_file, count_test_cases, delete_folder
 
 
-REGEX_PATTERN=r"(?:!\[.*?\])(?:\(|\[)(?P<url>(?:https?\:(?:\/\/)?)(?:\w|\-|\_|\.|\?|\/)+?\/(?P<end>(?:(?=_png\/|_jpg\/|_jpeg\/|_gif\/|_bmp\/|_svg\/)[^\/]+?[^()]+)|(?:[^\/()]+(?:\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg)?)))(?:\)|\])"
+REGEX_PATTERN=r"(?:!\[.*?\])(?:\(|\[)(?P<url>(?:https?\:(?:\/\/)?)(?:\w|\-|\_|\.|\?|\/)+?\/(?P<end>(?:(?=_png\/|_jpg\/|_jpeg\/|_gif\/|_bmp\/|_svg\/)[^\/]+?[^()]+)|(?:[^\/()]+(?:\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg)?)))(?: |\?|\)|\])"
 COROUTINE_NUM=2
     
 
@@ -117,7 +121,8 @@ def read_image_url_json(out_folder_path: str) -> Dict[str, str]:
 
 
 def delete_image_url_json(out_folder_path: str) -> None:
-    os.remove(os.path.join(out_folder_path,'all_img_dict.json'))
+    os.rename(os.path.join(out_folder_path,'all_img_dict.json'),
+              os.path.join(out_folder_path,'all_img_dict-bak%s.json'%datetime.now().strftime('%Y-%m-%d_%H-%M-%S_%f')[:-3]))
 
 
 def create_url2local_dict(regex: str, file_data: str, file_name: str) -> Dict[str, str]:
